@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -10,6 +10,9 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+
+let offsetL; // increase offset of data
+let sizeL; // increase size of data
 
 const useStyles = makeStyles(theme => ({
   heroContent: {
@@ -41,10 +44,15 @@ export default function Persons() {
   const [info, setInfo] = React.useState([]);
   const [ready, setReady] = React.useState(false);
   const history = useHistory();
-  const offset = 30; // don't variate with increasing data
-  const size = 15; //quantity of data
-  const aggregate = 'torre'; // don't change a thing
-  const url = `https://search.torre.co/people/_search/?[offset=${offset}&size=${size}&aggregate=${aggregate}]`;
+  let { offset, size } = useParams();
+  if (!offset || offset === undefined) {
+    offset = 16;
+  }
+  if (!size || size === undefined) {
+    size = 69;
+  }
+  const aggregate = ''; // don't change nothing yet
+  const url = `https://search.torre.co/people/_search/?offset=${offset}&size=${size}&aggregate=${aggregate}`;
   React.useEffect(() => {
     handleSearch();
     // eslint-disable-next-line
@@ -59,11 +67,34 @@ export default function Persons() {
       );
   };
 
+  const handleSearchRandom = () => {
+    offsetL = getRandomOffsetInt();
+    sizeL = getRandomSizeInt();
+    const urlRandom = `https://search.torre.co/people/_search/?offset=${offsetL}&size=${sizeL}&aggregate=${aggregate}`;
+    fetch(urlRandom, { method: 'POST' })
+      .then(res => res.json())
+      .then(contents => setInfo(contents))
+      .catch(() =>
+        console.log('Can’t access ' + url + ' response. Blocked by browser?')
+      );
+  };
+
+  function getRandomOffsetInt() {
+    const min = Math.ceil(1);
+    const max = Math.floor(10000);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  function getRandomSizeInt() {
+    const min = Math.ceil(1);
+    const max = Math.floor(500);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
   return (
     <React.Fragment>
       <CssBaseline />
       <main>
-        {console.log(info)}
         {/* Hero unit */}
         <div className={classes.heroContent}>
           <Container maxWidth='lg'>
@@ -91,7 +122,7 @@ export default function Persons() {
                   <Button
                     variant='contained'
                     color='primary'
-                    onClick={() => handleSearch()}
+                    onClick={() => handleSearchRandom()}
                   >
                     Random
                   </Button>
@@ -102,7 +133,7 @@ export default function Persons() {
                     color='primary'
                     onClick={() => setReady(!ready)}
                   >
-                    {!ready ? 'Show' : 'Hide'}
+                    {!ready ? 'Show Data' : 'Hide Data'}
                   </Button>
                 </Grid>
               </Grid>
@@ -112,43 +143,53 @@ export default function Persons() {
         <Container className={classes.cardGrid} maxWidth='lg'>
           {/* End hero unit */}
           <Grid container spacing={4}>
-            {ready
-              ? info.results.map((profile, i) => (
-                  <Grid item key={i} xs={12} sm={6} md={4}>
-                    <Card className={classes.card}>
-                      <CardMedia
-                        className={classes.cardMedia}
-                        image={
-                          profile.picture
-                            ? profile.picture
-                            : 'https://source.unsplash.com/random'
+            {ready ? (
+              info.results.map((profile, i) => (
+                <Grid item key={i} xs={12} sm={6} md={4}>
+                  <Card className={classes.card}>
+                    <CardMedia
+                      className={classes.cardMedia}
+                      image={
+                        profile.picture
+                          ? profile.picture
+                          : 'https://source.unsplash.com/random'
+                      }
+                      title='Image'
+                    />
+                    <CardContent className={classes.cardContent}>
+                      <Typography gutterBottom variant='h5' component='h2'>
+                        {profile.name}
+                      </Typography>
+                      <Typography>
+                        {profile.professionalHeadline}, located in{' '}
+                        {profile.locationName}
+                      </Typography>
+                    </CardContent>
+                    <CardActions>
+                      <Button
+                        size='small'
+                        color='primary'
+                        onClick={() =>
+                          history.push(`/profile/${profile.username}`)
                         }
-                        title='Image'
-                      />
-                      <CardContent className={classes.cardContent}>
-                        <Typography gutterBottom variant='h5' component='h2'>
-                          {profile.name}
-                        </Typography>
-                        <Typography>
-                          {profile.professionalHeadline}, located in{' '}
-                          {profile.locationName}
-                        </Typography>
-                      </CardContent>
-                      <CardActions>
-                        <Button
-                          size='small'
-                          color='primary'
-                          onClick={() =>
-                            history.push(`/profile/${profile.username}`)
-                          }
-                        >
-                          View
-                        </Button>
-                      </CardActions>
-                    </Card>
-                  </Grid>
-                ))
-              : ''}
+                      >
+                        See Profile
+                      </Button>
+                    </CardActions>
+                  </Card>
+                </Grid>
+              ))
+            ) : (
+              <Button
+                size='small'
+                color='primary'
+                onClick={() => {
+                  history.push(`/graphs/${offsetL}/${sizeL}`);
+                }}
+              >
+                See Random Data
+              </Button>
+            )}
           </Grid>
         </Container>
       </main>

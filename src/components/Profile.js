@@ -26,7 +26,6 @@ const useStyles = makeStyles(theme => ({
   card: {
     height: '100%',
     width: '100%',
-    display: 'flex',
     flexDirection: 'column',
   },
   cardMedia: {
@@ -63,7 +62,6 @@ export default function Profile() {
     <React.Fragment>
       <CssBaseline />
       <main>
-        {console.log(info)}
         {/* Hero unit */}
         <div className={classes.heroContent}>
           <Container maxWidth='lg'>
@@ -101,7 +99,7 @@ export default function Profile() {
         </div>
         <Container className={classes.cardGrid} maxWidth='lg'>
           {/* End hero unit */}
-          <Grid container spacing={1} justify='center'>
+          <Grid container spacing={4}>
             {ready ? (
               <Grid item xs={12} sm={12} md={12} lg={12}>
                 <Card className={classes.card}>

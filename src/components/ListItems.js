@@ -14,7 +14,7 @@ export const mainListItems = (
         <ListItemIcon>
           <PeopleIcon />
         </ListItemIcon>
-        <ListItemText primary='Persons' />
+        <ListItemText primary='Persons' style={{ color: 'black' }} />
       </ListItem>
     </Link>
     <Link to='/graphs' style={{ textDecoration: 'none' }}>
@@ -22,7 +22,7 @@ export const mainListItems = (
         <ListItemIcon>
           <BarChartIcon />
         </ListItemIcon>
-        <ListItemText primary='Graphs' />
+        <ListItemText primary='Graphs' style={{ color: 'black' }} />
       </ListItem>
     </Link>
   </div>
@@ -35,7 +35,7 @@ export const secondaryListItems = (
         <ListItemIcon>
           <AssignmentIcon />
         </ListItemIcon>
-        <ListItemText primary='Explanation' />
+        <ListItemText primary='Explanation' style={{ color: 'black' }} />
       </ListItem>
     </Link>
   </div>

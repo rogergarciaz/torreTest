@@ -1,33 +1,33 @@
 import React from 'react';
-import Link from '@material-ui/core/Link';
-import { makeStyles } from '@material-ui/core/styles';
+import { Link, useParams } from 'react-router-dom';
 import Typography from '@material-ui/core/Typography';
 import Title from './Title';
 
-function preventDefault(event) {
-  event.preventDefault();
-}
-
-const useStyles = makeStyles({
-  depositContext: {
-    flex: 1,
-  },
-});
-
-export default function Deposits() {
-  const classes = useStyles();
+export default function Deposits(props) {
+  let { offset, size } = useParams();
+  if (!offset || offset === 'undefined') {
+    offset = 16;
+  }
+  if (!size || size === 'undefined') {
+    size = 69;
+  }
   return (
     <React.Fragment>
-      <Title>Recent Deposits</Title>
+      <Title>Variables</Title>
       <Typography component='p' variant='h4'>
-        $3,024.00
+        Offset: {props.offset}
       </Typography>
-      <Typography color='textSecondary' className={classes.depositContext}>
-        on 15 March, 2019
+      <Typography component='p' variant='h4'>
+        Size: {props.size}
       </Typography>
+      <br />
       <div>
-        <Link color='primary' href='#' onClick={preventDefault}>
-          View balance
+        <Link
+          color='primary'
+          to={`/persons/${offset}/${size}`}
+          style={{ textDecoration: 'none' }}
+        >
+          See Persons
         </Link>
       </div>
     </React.Fragment>
