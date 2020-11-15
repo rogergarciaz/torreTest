@@ -1,5 +1,6 @@
 import './App.css';
-import CarData from './components/CardData';
+import Persons from './components/Persons';
+import Profile from './components/Profile';
 import Dashboard from './components/Dashboard';
 import SideBar from './components/SideBar';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
@@ -11,7 +12,12 @@ function App() {
         <Switch>
           <Route path='/persons'>
             <SideBar>
-              <CarData />
+              <Persons />
+            </SideBar>
+          </Route>
+          <Route path='/profile/:username'>
+            <SideBar>
+              <Profile />
             </SideBar>
           </Route>
           <Route path='/graphs'>
@@ -21,7 +27,7 @@ function App() {
           </Route>
           <Route path='/'>
             <SideBar>
-              <CarData />
+              <Persons />
             </SideBar>
           </Route>
         </Switch>
