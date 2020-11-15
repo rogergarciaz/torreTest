@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -10,6 +10,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import List from './List';
 
 const useStyles = makeStyles(theme => ({
   heroContent: {
@@ -38,25 +39,16 @@ const useStyles = makeStyles(theme => ({
 
 export default function Profile() {
   const classes = useStyles();
-  const { username } = useParams();
-  const [info, setInfo] = React.useState([]);
   const [ready, setReady] = React.useState(false);
   const history = useHistory();
-  const proxyurl = 'https://cors-anywhere.herokuapp.com/';
-  const url = `https://torre.bio/api/bios/${username}`;
-  React.useEffect(() => {
-    handleSearch();
-    // eslint-disable-next-line
-  }, []);
 
-  const handleSearch = () => {
-    fetch(proxyurl + url, { method: 'GET' })
-      .then(res => res.json())
-      .then(contents => setInfo(contents))
-      .catch(() =>
-        console.log('Can’t access ' + url + ' response. Blocked by browser?')
-      );
-  };
+  const location = useLocation();
+
+  React.useEffect(() => {
+    //  console.log(location.pathname); // result: '/secondpage'
+    //  console.log(location.search); // result: '?query=abc'
+    console.log(location.state.profileS); // result: 'some_value'
+  }, [location]);
 
   return (
     <React.Fragment>
@@ -80,7 +72,7 @@ export default function Profile() {
               color='textSecondary'
               paragraph
             >
-              Here you see detailed info from the profile you selected
+              Here you can see the info from the profile you selected
             </Typography>
             <div className={classes.heroButtons}>
               <Grid container spacing={2} justify='center'>
@@ -90,7 +82,7 @@ export default function Profile() {
                     color='primary'
                     onClick={() => setReady(!ready)}
                   >
-                    {!ready ? 'Show' : 'Hide'}
+                    {!ready ? 'Show Data' : 'Hide Data'}
                   </Button>
                 </Grid>
               </Grid>
@@ -107,18 +99,24 @@ export default function Profile() {
                     className={classes.cardMedia}
                     // image='https://source.unsplash.com/random'
                     image={
-                      info.person.picture
-                        ? info.person.picture
+                      location.state.profileS.picture
+                        ? location.state.profileS.picture
                         : 'https://source.unsplash.com/random'
                     }
                     title='Image'
                   />
                   <CardContent className={classes.cardContent}>
                     <Typography gutterBottom variant='h5' component='h2'>
-                      {info.person.name}
+                      <strong>Name:</strong> {location.state.profileS.name}{' '}
+                      <strong>User Name:</strong>{' '}
+                      {location.state.profileS.username}
                     </Typography>
-                    <Typography>{info.person.professionalHeadline}</Typography>
-                    <Typography>{info.person.summaryOfBio}</Typography>
+                    <Typography>
+                      {location.state.profileS.professionalHeadline} located in{' '}
+                      {location.state.profileS.locationName}
+                    </Typography>
+
+                    <List list={location.state.profileS.skills} />
                   </CardContent>
                   <CardActions>
                     <Button
@@ -138,7 +136,7 @@ export default function Profile() {
                 component='h3'
                 style={{ textAlign: 'center' }}
               >
-                Nothing to show
+                Click Show Data to see this person info
               </Typography>
             )}
           </Grid>

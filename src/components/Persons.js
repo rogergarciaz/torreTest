@@ -114,7 +114,9 @@ export default function Persons() {
               paragraph
             >
               Every time you click the button <strong>Random</strong> it will
-              search for amazing people that are using Torre.
+              search for a random group of amazing people that are using Torre.
+              Remember you have to click HIDE DATA in order to be able to see it
+              in a graph way.
             </Typography>
             <div className={classes.heroButtons}>
               <Grid container spacing={2} justify='center'>
@@ -170,7 +172,10 @@ export default function Persons() {
                         size='small'
                         color='primary'
                         onClick={() =>
-                          history.push(`/profile/${profile.username}`)
+                          history.push({
+                            pathname: `/profile/${profile.username}`,
+                            state: { profileS: profile },
+                          })
                         }
                       >
                         See Profile
@@ -187,7 +192,7 @@ export default function Persons() {
                   history.push(`/graphs/${offsetL}/${sizeL}`);
                 }}
               >
-                See Random Data
+                Graph of Random Data
               </Button>
             )}
           </Grid>
