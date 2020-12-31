@@ -1,4 +1,4 @@
-This was made for the test of the internship in torre.
+This app shows the data from random profiles registered in Torre. Using React Js and the torre API. You can see this information in a table, card or chart.
 
 ## Commands
 
